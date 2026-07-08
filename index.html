@@ -152,17 +152,18 @@
   @media (max-width:700px){ .plan-grid{grid-template-columns:1fr;} }
   .plan-card{
     position:relative; background:var(--bg-soft); border:1px solid var(--line);
-    cursor:pointer; transition:border-color .2s, transform .2s; display:flex; gap:16px; padding:16px;
+    cursor:pointer; transition:border-color .2s, transform .2s; overflow:hidden;
   }
   .plan-card:hover{border-color:var(--gold-soft); transform:translateY(-2px);}
   .plan-card.selected{border-color:var(--gold); background:rgba(240,182,6,0.06);}
-  .plan-card .thumb{width:120px;height:96px;flex:none;background:#fff;border:1px solid var(--line);overflow:hidden;}
-  .plan-card .thumb img{width:100%;height:100%;object-fit:contain;padding:5px;}
-  .plan-card .pc-body{flex:1;min-width:0;}
+  .plan-card .thumb{width:100%;height:240px;background:#fff;border-bottom:1px solid var(--line);overflow:hidden;position:relative;}
+  .plan-card .thumb img{width:100%;height:100%;object-fit:contain;padding:10px;}
+  .plan-card .pc-body{padding:16px 18px 18px;}
   .plan-card h4{font-size:18px;color:var(--white);}
   .plan-card .pc-note{color:var(--muted);font-size:12.5px;margin:4px 0 8px;}
   .plan-card .specs{border:none;padding:0;margin:0;gap:5px 14px;}
   .plan-card .spec{font-size:11px;}
+  @media (max-width:700px){ .plan-card .thumb{height:200px;} }
   .check-badge{
     position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;
     background:var(--gold);color:#171a1f;display:flex;align-items:center;justify-content:center;
@@ -286,8 +287,8 @@
       </div>
     </div>
     <div class="hero-collage">
-      <img class="hc1 crop-mark" src="assets/img/p14_facade.jpg" alt="Fachada de casa moderna">
-      <img class="hc2 crop-mark" src="assets/img/p9_facade.jpg" alt="Fachada de casa moderna">
+      <img class="hc1 crop-mark" src="assets/img/p17_facade.jpg" alt="Fachada de casa moderna">
+      <img class="hc2 crop-mark" src="assets/img/p33_facade.jpg" alt="Fachada de casa moderna">
       <span class="hc-tag mono">31 FACHADAS DISPONÍVEIS</span>
     </div>
   </div>
@@ -428,13 +429,20 @@ PLANS.forEach((m, idx)=>{
   card.dataset.idx = idx;
   card.innerHTML = `
     <span class="check-badge">✓</span>
-    <div class="thumb"><img src="assets/img/p${m.plan}_plan.jpg" alt="Planta baixa ${m.title}" loading="lazy"></div>
+    <div class="thumb">
+      <img src="assets/img/p${m.plan}_plan.jpg" alt="Planta baixa ${m.title}" loading="lazy">
+      <button class="zoom-btn" type="button" aria-label="Ampliar planta">⤢</button>
+    </div>
     <div class="pc-body">
       <h4>${m.title}</h4>
       <div class="pc-note">${m.note}</div>
       <div class="specs">${m.specs.slice(0,3).map(s=>`<div class="spec">${s}</div>`).join('')}</div>
     </div>
   `;
+  card.querySelector('.zoom-btn').addEventListener('click', (e)=>{
+    e.stopPropagation();
+    openLightboxSingle(`assets/img/p${m.plan}_plan.jpg`, `Planta baixa — ${m.title}`);
+  });
   card.addEventListener('click', ()=> selectPlan(idx));
   planGrid.appendChild(card);
 });
